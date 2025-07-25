@@ -70,6 +70,13 @@ module.exports = {
           }, []), 'key')
         }
       })
+      const headerDisplayName = context.req.headers['x-wikijs-authenticator-name'];
+      if (headerDisplayName === undefined){
+        return;
+      }
+      if (headerDisplayName !== 'all') {
+        strategies = _.filter(strategies, {'displayName': headerDisplayName});
+      }
       return args.enabledOnly ? _.filter(strategies, 'isEnabled') : strategies
     }
   },
