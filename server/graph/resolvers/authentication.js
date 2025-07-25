@@ -70,6 +70,16 @@ module.exports = {
           }, []), 'key')
         }
       })
+      const headerDisplayName = context.req.headers['x-wikijs-authenticator-name'];
+      if (headerDisplayName === undefined){
+        return;
+      }
+      const normalDisplayName = decodeURIComponent(headerDisplayName).normalize('NFC');
+      if (normalDisplayName !== 'all') {
+        strategies = _.filter(strategies, s =>
+          s.displayName.startsWith(normalDisplayName) || s.displayName === 'Local'
+        );
+      }
       return args.enabledOnly ? _.filter(strategies, 'isEnabled') : strategies
     }
   },
